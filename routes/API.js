@@ -1,14 +1,14 @@
 const notes = require("express").Router();
 const { v4: uuidv4 } = require("uuid");
 let db = require("../db/db.json");
-
+const fs = require("fs")
 notes.get("/api/notes", function (req, res) {
-  db = JSON.parse(fs.readFileSync("./dv/db.json")) || [];
-
+  db = JSON.parse(fs.readFileSync("./db/db.json")) || [];
+  console.log("GET",db)
   res.json(db);
 });
 notes.post("/api/notes", function (req, res) {
-  console.log(req.body);
+  console.log("post", req.body,db);
 
   const { title, text } = req.body;
 
@@ -23,13 +23,13 @@ notes.post("/api/notes", function (req, res) {
   });
 
   res.json(db);
+
 });
 
 notes.delete("/api/notes", function (erq, res) {
-  db = JSON.parse(fs.readFileSync("./dv/db.json")) || [];
+  db = JSON.parse(fs.readFileSync("./db/db.json")) || [];
 
   res.json(db);
 });
 
-
-module.exports = notes
+module.exports = notes;
