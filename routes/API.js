@@ -3,7 +3,7 @@ const notes = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
-
+const api = require('./routes/API.js');
 const dbPath = path.join(__dirname, "../db/db.json");
 
 // GET all notes
