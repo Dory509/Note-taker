@@ -17,5 +17,5 @@ app.use(express.static('public'));
 app.use(html)
 
 app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT}`)
+  console.log(`App is live on port ${PORT}. Access it via Render URL.`)
 );
