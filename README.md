@@ -1,63 +1,103 @@
-# Express.js
-# 11 Express.js: Note Taker
+Note Taker App
+
+Description
+
+The Note Taker App is a simple web application that allows users to write, save, and delete notes. It utilizes an Express.js back end to handle API requests and stores notes persistently in a db.json file. The application is deployed on Render for easy access.
+
+Table of Contents
+	•	Description
+	•	Installation
+	•	Usage
+	•	Features
+	•	Deployment
+	•	Technologies Used
+	•	Screenshots
+	•	License
+	•	Contributing
+	•	Questions
+
+Installation
+
+To run this project locally, follow these steps:
+	1.	Clone the repository:
+
+git clone https://github.com/Dory509/Note-taker.git
+cd note-taker
 
 
-[Live App](https://note-taker-amp7.onrender.com/notes)
+	2.	Install dependencies:
 
-[Github] https://github.com/Dory509/Note-taker
+npm install
 
-## screenshot
 
-## Your Task
+	3.	Run the application:
 
-Your assignment is to modify starter code to create an application called Note Taker that can be used to write and save notes. This application will use an Express.js back end and will save and retrieve note data from a JSON file.
+npm  install
 
-The application’s front end has already been created. It's your job to build the back end, connect the two, and then deploy the entire application to Render.
+Or use nodemon for automatic restarts:
 
-## User Story
+npm run start
 
-```md
-AS A small business owner
-I WANT to be able to write and save notes
-SO THAT I can organize my thoughts and keep track of tasks I need to complete
-```
 
-## Acceptance Criteria
+	4.	Open the app in your browser:
 
-```md
-GIVEN a note-taking application
-WHEN I open the Note Taker
-THEN I am presented with a landing page with a link to a notes page
-WHEN I click on the link to the notes page
-THEN I am presented with a page with existing notes listed in the left-hand column, plus empty fields to enter a new note title and the note’s text in the right-hand column
-WHEN I enter a new note title and the note’s text
-THEN a "Save Note" button and a "Clear Form" button appear in the navigation at the top of the page
-WHEN I click on the Save button
-THEN the new note I have entered is saved and appears in the left-hand column with the other existing notes and the buttons in the navigation disappear
-WHEN I click on an existing note in the list in the left-hand column
-THEN that note appears in the right-hand column and a "New Note" button appears in the navigation
-WHEN I click on the "New Note" button in the navigation at the top of the page
-THEN I am presented with empty fields to enter a new note title and the note’s text in the right-hand column and the button disappears
-```
+http://localhost:3001
 
-## Mock-Up
+Usage
+	1.	Open the application in your browser.
+	2.	Click “Get Started” to access the notes page.
+	3.	Add a title and text for a new note.
+	4.	Click the Save button to store the note.
+	5.	Click on an existing note in the left column to view it.
+	6.	Use the New Note button to create a new note.
+	7.	(Bonus) Click the Delete button next to a note to remove it.
 
-The following GIF shows the web application's appearance and functionality:
+Features
 
-![Existing notes are listed in the left-hand column with empty fields on the right-hand side for the new note’s title and text.](./Assets/11-express-homework-demo.gif)
+✅ Write and save notes
+✅ View saved notes
+✅ Delete notes (Bonus)
+✅ Persistent data storage using db.json
+✅ User-friendly interface
 
-## Getting Started
+Deployment
 
-On the back end, the application should include a `db.json` file that will be used to store and retrieve notes using the `fs` module.
+The application is deployed on Render:
+🔗 Live App: View Here
+🔗 GitHub Repository: GitHub Repo
 
-The following HTML routes should be created:
+Technologies Used
+	•	Node.js - JavaScript runtime environment
+	•	Express.js - Back-end framework for handling API requests
+	•	uuid - Generates unique IDs for each note
+	•	fs (File System Module) - Reads and writes to db.json
+	•	Render - Deployment platform
 
-* `GET /notes` should return the `notes.html` file.
+Screenshots
 
-* `GET *` should return the `index.html` file.
+Home Page
 
-The following API routes should be created:
+Notes Page
 
-* `GET /api/notes` should read the `db.json` file and return all saved notes as JSON.
+License
 
-* `POST /api/notes` should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved (look into npm packages that could do this for you).
+This project is licensed under the MIT License.
+
+Contributing
+
+Contributions are welcome! If you’d like to improve this project:
+	1.	Fork the repository
+	2.	Create a new branch (git checkout -b feature-branch)
+	3.	Commit changes (git commit -m "Added a new feature")
+	4.	Push to the branch (git push origin feature-branch)
+	5.	Open a pull request
+
+Questions?
+
+For any questions, reach out via:
+📧 Email: your.email@example.com
+🐙 GitHub: Your GitHub Profile
+
+🚀 Enjoy taking notes! 🚀
+
+Let me know if you want any modifications or need help with screenshots!
