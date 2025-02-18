@@ -6,13 +6,13 @@ const { v4: uuidv4 } = require("uuid");
 
 const dbPath = path.join(__dirname, "../db/db.json");
 
-// ✅ Fix GET request (Remove `/api` from route)
+// Fix GET request (Remove `/api` from route)
 notes.get("/notes", (req, res) => {
   const data = fs.readFileSync(dbPath, "utf8");
   res.json(JSON.parse(data) || []);
 });
 
-// ✅ Fix POST request (Remove `/api` from route)
+// Fix POST request (Remove `/api` from route)
 notes.post("/notes", (req, res) => {
   const { title, text } = req.body;
   if (!title || !text) return res.status(400).json({ error: "Invalid input" });
@@ -24,7 +24,7 @@ notes.post("/notes", (req, res) => {
   res.json(newNote);
 });
 
-// ✅ Fix DELETE request (Remove `/api` from route)
+// Fix DELETE request (Remove `/api` from route)
 notes.delete("/notes/:id", (req, res) => {
   let notesData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
   notesData = notesData.filter((note) => note.id !== req.params.id);
