@@ -3,6 +3,7 @@ let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
+let clearBtn;
 let noteList;
 
 if (window.location.pathname === '/notes') {
@@ -17,42 +18,54 @@ if (window.location.pathname === '/notes') {
 
 // Show an element
 const show = (elem) => {
-  elem.style.display = 'inline';
+  if (elem) elem.style.display = 'inline';
 };
 
 // Hide an element
 const hide = (elem) => {
-  elem.style.display = 'none';
+  if (elem) elem.style.display = 'none';
 };
 
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-const getNotes = () =>
-  fetch('/api/notes', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+// Fetch all saved notes from API
+const getNotes = async () => {
+  try {
+    const response = await fetch('/api/notes', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-const saveNote = (note) =>
-  fetch('/api/notes', {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch notes. Status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching notes:", error);
+    return [];
+  }
+};
+
+// Save a new note to the API
+const saveNote = async (note) => {
+  await fetch('/api/notes', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(note)
   });
+};
 
-const deleteNote = (id) =>
-  fetch(`/api/notes/${id}`, {
+// Delete a note from the API
+const deleteNote = async (id) => {
+  await fetch(`/api/notes/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: { 'Content-Type': 'application/json' }
   });
+};
 
+// Render a selected note in the editor
 const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
@@ -61,8 +74,8 @@ const renderActiveNote = () => {
     show(newNoteBtn);
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
-    noteTitle.value = activeNote.title;
-    noteText.value = activeNote.text;
+    noteTitle.value = activeNote.title || '';
+    noteText.value = activeNote.text || '';
   } else {
     hide(newNoteBtn);
     noteTitle.removeAttribute('readonly');
@@ -72,44 +85,62 @@ const renderActiveNote = () => {
   }
 };
 
-const handleNoteSave = () => {
+// Handle saving a new note
+const handleNoteSave = async () => {
   const newNote = {
-    title: noteTitle.value,
-    text: noteText.value
+    title: noteTitle.value.trim(),
+    text: noteText.value.trim()
   };
-  saveNote(newNote).then(() => {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+
+  if (!newNote.title || !newNote.text) {
+    alert("Both title and text are required.");
+    return;
+  }
+
+  await saveNote(newNote);
+  getAndRenderNotes();
+  renderActiveNote();
 };
 
 // Delete the clicked note
-const handleNoteDelete = (e) => {
-  // Prevents the click listener for the list from being called when the button inside of it is clicked
+const handleNoteDelete = async (e) => {
   e.stopPropagation();
 
   const note = e.target;
-  const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
+  const noteData = note.parentElement.getAttribute('data-note');
+
+  if (!noteData) {
+    console.error("Error: Missing note data");
+    return;
+  }
+
+  const noteId = JSON.parse(noteData).id;
 
   if (activeNote.id === noteId) {
     activeNote = {};
   }
 
-  deleteNote(noteId).then(() => {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+  await deleteNote(noteId);
+  getAndRenderNotes();
+  renderActiveNote();
 };
 
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {
   e.preventDefault();
-  activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+  const noteData = e.target.parentElement.getAttribute('data-note');
+
+  if (!noteData) {
+    console.error("Error: Missing note data");
+    return;
+  }
+
+  activeNote = JSON.parse(noteData);
   renderActiveNote();
 };
 
-// Sets the activeNote to and empty object and allows the user to enter a new note
-const handleNewNoteView = (e) => {
+// Sets the activeNote to an empty object and allows the user to enter a new note
+const handleNewNoteView = () => {
   activeNote = {};
   show(clearBtn);
   renderActiveNote();
@@ -128,8 +159,9 @@ const handleRenderBtns = () => {
 };
 
 // Render the list of note titles
-const renderNoteList = async (notes) => {
-  let jsonNotes = await notes.json();
+const renderNoteList = async () => {
+  const notes = await getNotes();
+
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
@@ -149,27 +181,21 @@ const renderNoteList = async (notes) => {
     liEl.append(spanEl);
 
     if (delBtn) {
-      const delBtnEl = document.createElement('i');
-      delBtnEl.classList.add(
-        'fas',
-        'fa-trash-alt',
-        'float-right',
-        'text-danger',
-        'delete-note'
-      );
+      const delBtnEl = document.createElement('button');
+      delBtnEl.textContent = "Delete";
+      delBtnEl.classList.add('delete-note');
       delBtnEl.addEventListener('click', handleNoteDelete);
-
       liEl.append(delBtnEl);
     }
 
     return liEl;
   };
 
-  if (jsonNotes.length === 0) {
+  if (notes.length === 0) {
     noteListItems.push(createLi('No saved Notes', false));
   }
 
-  jsonNotes.forEach((note) => {
+  notes.forEach((note) => {
     const li = createLi(note.title);
     li.dataset.note = JSON.stringify(note);
 
@@ -182,13 +208,13 @@ const renderNoteList = async (notes) => {
 };
 
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => renderNoteList();
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
   newNoteBtn.addEventListener('click', handleNewNoteView);
-  clearBtn.addEventListener('click', renderActiveNote);
-  noteForm.addEventListener('input', handleRenderBtns);
+  if (clearBtn) clearBtn.addEventListener('click', renderActiveNote);
+  if (noteForm) noteForm.addEventListener('input', handleRenderBtns);
 }
 
 getAndRenderNotes();

@@ -3,7 +3,7 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
-let activeNote = {}; // Define activeNote to avoid errors
+let activeNote = {}; 
 
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
