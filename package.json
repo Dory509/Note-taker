@@ -12,6 +12,7 @@
     "stack",
     "app"
   ],
+  "type":"commonjs",
   "author": "Dory",
   "license": "ISC",
   "dependencies": {
