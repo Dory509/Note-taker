@@ -40,8 +40,10 @@ npm run start
 
 
 	4.	Open the app in your browser:
-
+The Nodejs:
 http://localhost:3001
+Render:
+https://note-taker-2718.onrender.com
 
 Usage
 	1.	Open the application in your browser.
